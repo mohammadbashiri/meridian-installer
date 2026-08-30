@@ -93,6 +93,16 @@ install_skill "${PI_AGENT_HOME:-$HOME/.pi/agent}"
 install_skill "${CLAUDE_HOME:-$HOME/.claude}"
 install_skill "${CODEX_HOME:-$HOME/.codex}"
 
+if [ "$BIN_DIRECTORY" = "$HOME/.local/bin" ] && [ "${MERIDIAN_NO_PATH_UPDATE:-0}" != "1" ]; then
+  PROFILE="${MERIDIAN_SHELL_PROFILE:-$HOME/.zprofile}"
+  PATH_LINE='export PATH="$HOME/.local/bin:$PATH"'
+  touch "$PROFILE"
+  if ! grep -F "$PATH_LINE" "$PROFILE" >/dev/null 2>&1; then
+    printf '\n# Meridian command\n%s\n' "$PATH_LINE" >> "$PROFILE"
+    echo "Added ~/.local/bin to PATH in $PROFILE (applies to new shells)."
+  fi
+fi
+
 echo "Installed Meridian $VERSION"
 echo "CLI: $BIN_DIRECTORY/meridian"
 echo "Run meridian-uninstall to remove Meridian while preserving vaults and local state."
