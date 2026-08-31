@@ -66,7 +66,9 @@ cp "$BINARY_SOURCE" "$TARGET/bin/meridian"
 chmod 755 "$TARGET/bin/meridian"
 cp "$SKILL_SOURCE" "$TARGET/skills/meridian/SKILL.md"
 ln -s "versions/$VERSION" "$DATA_DIRECTORY/current.new.$$"
-mv -f "$DATA_DIRECTORY/current.new.$$" "$DATA_DIRECTORY/current"
+# On macOS, mv follows a destination symlink to a directory unless -h is used.
+# -h replaces current itself, atomically switching the installed version.
+mv -hf "$DATA_DIRECTORY/current.new.$$" "$DATA_DIRECTORY/current"
 
 cat > "$BIN_DIRECTORY/meridian.new.$$" <<EOF
 #!/bin/sh
